@@ -1,0 +1,23 @@
+package com.Employee.Repository;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.Employee.entity.Employe;
+
+public interface EmployeRepository extends JpaRepository<Employe, Long> {
+	
+	// Find employee by email
+    Optional<Employe> findByEmail(String email);
+
+    // Find employees by department
+    List<Employe> findByDepartment(String department);
+
+    // Find employees with salary greater than or equal to given salary
+    List<Employe> findBySalaryGreaterThanEqual(Double salary);
+	
+	
+
+}
