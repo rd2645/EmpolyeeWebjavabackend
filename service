@@ -1,0 +1,87 @@
+package com.Employee.Service;
+
+
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.Employee.Repository.EmployeRepository;
+import com.Employee.entity.Employe;
+
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+
+@Service
+@Transactional
+@RequiredArgsConstructor
+public class EmployeService {
+
+    private final EmployeRepository employeeRepository;
+
+    // Method 1 : Add Employee
+    public Employe addEmployee(Employe employee) {
+        return employeeRepository.save(employee);
+    }
+
+    // Method 2 : Get All Employees
+    public List<Employe> getAllEmployees() {
+        return employeeRepository.findAll();
+    }
+
+    // Method 3 : Get Employee By ID
+    public Employe getEmployeeById(Long id) {
+
+        return employeeRepository.findById(id)
+                .orElseThrow(() -> new com.Employee.Exception.ResourceNotFoundException("Invalid Employee Id"));
+    }
+
+    // Method 4 : Update Employee Details
+    public Employe updateEmployee(Long id, Employe employe) {
+
+        Employe emp = employeeRepository.findById(id)
+                .orElseThrow(() -> new com.Employee.Exception.ResourceNotFoundException("Invalid Employee Id"));
+
+        emp.setName(employe.getName());
+        emp.setEmail(employe.getEmail());
+        emp.setDepartment(employe.getDepartment());
+        emp.setDesignation(employe.getDesignation());
+        emp.setSalary(employe.getSalary());
+        emp.setLocation(employe.getLocation());
+        emp.setJoiningDate(employe.getJoiningDate());
+        emp.setStatus(employe.getStatus());
+
+        return employeeRepository.save(emp);
+    }
+
+    // Method 5 : Delete Employee
+    public String deleteEmployee(Long id) {
+
+        Employe emp = employeeRepository.findById(id)
+                .orElseThrow(() -> new com.Employee.Exception.ResourceNotFoundException("Invalid Employee Id"));
+
+        employeeRepository.delete(emp);
+
+        return "Employee Deleted Successfully";
+    }
+
+    // Method 6 : Get Employees By Department
+    public List<Employe> getByDepartment(String department) {
+
+        return employeeRepository.findByDepartment(department);
+    }
+
+    // Method 7 : Get Employees By Minimum Salary
+    public List<Employe> getByMinimumSalary(Double salary) {
+
+        return employeeRepository.findBySalaryGreaterThanEqual(salary);
+    }
+
+    // Method 8 : Get Employee By Email
+    public Employe getByEmail(String email) {
+
+        return employeeRepository.findByEmail(email)
+                .orElseThrow(() -> new com.Employee.Exception.ResourceNotFoundException("Invalid Email"));
+    }
+
+}
